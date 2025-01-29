@@ -9,14 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
-/**
- *  - 메서드 구현
- *  - DI 적용
- *  - Spring Data JPA 적용
- */
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
@@ -42,7 +36,6 @@ public class MemberService {
         // 추가된 부분
         Optional.ofNullable(member.getMemberStatus())
                 .ifPresent(memberStatus -> findMember.setMemberStatus(memberStatus));
-        findMember.setModifiedAt(LocalDateTime.now());
 
         return memberRepository.save(findMember);
     }
