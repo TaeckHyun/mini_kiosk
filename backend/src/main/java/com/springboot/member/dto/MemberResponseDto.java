@@ -13,12 +13,9 @@ public class MemberResponseDto {
     private String name;
     private String phone;
     private Member.MemberStatus memberStatus;
-    private Stamp stamp;
+    private int stampCount;
 
     public String getMemberStatus() {
         return memberStatus.getStatus();
-    }
-    public int getStamp() {
-        return stamp.getStampCount();
     }
 }

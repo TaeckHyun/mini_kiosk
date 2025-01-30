@@ -1,11 +1,14 @@
 package com.springboot.coffee.entity;
 
 import com.springboot.config.BaseEntity;
+import com.springboot.order.entity.OrderCoffee;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,6 +34,16 @@ public class Coffee extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, length = 30)
     private CoffeeStatus coffeeStatus = CoffeeStatus.COFFEE_FOR_SALE;
+
+    @OneToMany(mappedBy = "coffee")
+    private List<OrderCoffee> orderCoffees = new ArrayList<>();
+
+    public void setOrderCoffee(OrderCoffee orderCoffee) {
+        this.orderCoffees.add(orderCoffee);
+        if (orderCoffee.getCoffee() != this) {
+            orderCoffee.setCoffee(this);
+        }
+    }
 
     public enum CoffeeStatus {
         COFFEE_FOR_SALE("판매 중"),

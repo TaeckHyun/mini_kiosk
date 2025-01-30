@@ -12,19 +12,22 @@ import com.springboot.utils.UriCreator;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v11/coffees")
+@RequestMapping("/v1/coffees")
+@Validated
 public class CoffeeController {
     private CoffeeMapper coffeeMapper;
     private CoffeeService coffeeService;
-    private final static String COFFEE_DEFAULT_URL = "/v11/coffees";
+    private final static String COFFEE_DEFAULT_URL = "/v1/coffees";
 
     public CoffeeController(CoffeeMapper coffeeMapper, CoffeeService coffeeService) {
         this.coffeeMapper = coffeeMapper;
@@ -32,7 +35,7 @@ public class CoffeeController {
     }
 
     @PostMapping
-    public ResponseEntity postCoffee(@RequestBody CoffeePostDto coffeePostDto) {
+    public ResponseEntity postCoffee(@RequestBody @Valid CoffeePostDto coffeePostDto) {
         Coffee coffee = coffeeService.createCoffee(coffeeMapper.coffeePostDtoToCoffee(coffeePostDto));
         URI location = UriCreator.createUri(COFFEE_DEFAULT_URL, coffee.getCoffeeId());
 

@@ -1,5 +1,6 @@
 package com.springboot.order.dto;
 
+import com.springboot.member.entity.Member;
 import com.springboot.order.entity.Order;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,4 +16,8 @@ public class OrderResponseDto {
     private Order.OrderStatus orderStatus;
     private List<OrderCoffeeResponseDto> orderCoffees;
     private LocalDateTime createdAt;
+
+    public void setMember(Member member) {
+        this.memberId = member.getMemberId();
+    }
 }

@@ -1,24 +1,51 @@
 package com.springboot.order.entity;
 
+import com.springboot.config.BaseEntity;
+import com.springboot.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "ORDERS")
-public class Order {
+public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long orderId;
+    private Long orderId;
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.ORDER_REQUEST;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderCoffee> orderCoffees = new ArrayList<>();
+
+    public void setMember (Member member) {
+        this.member = member;
+
+        if(!member.getOrders().contains(this)) {
+            member.setOrder(this);
+        }
+    }
+
+    public void setOrderCoffee(OrderCoffee orderCoffee) {
+        if(orderCoffee.getOrder() != this) {
+            orderCoffee.setOrder(this);
+        }
+        this.orderCoffees.add(orderCoffee);
+    }
+
 
     public enum OrderStatus {
         ORDER_REQUEST(1, "주문 요청"),
@@ -27,14 +54,14 @@ public class Order {
         ORDER_CANCEL(4, "주문 취소");
 
         @Getter
-        private int statusNumber;
+        private int stepNumber;
 
         @Getter
-        private String statusNow;
+        private String stepDescription;
 
-        OrderStatus(int statusNumber, String statusNow) {
-            this.statusNumber = statusNumber;
-            this.statusNow = statusNow;
+        OrderStatus(int stepNumber, String stepDescription) {
+            this.stepNumber = stepNumber;
+            this.stepDescription = stepDescription;
         }
     }
 }

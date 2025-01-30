@@ -4,6 +4,7 @@ import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.member.entity.Member;
 import com.springboot.member.repository.MemberRepository;
+import com.springboot.stamp.Stamp;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,9 +21,8 @@ public class MemberService {
     }
 
     public Member createMember(Member member) {
-        // 이미 등록된 이메일인지 확인
         verifyExistsEmail(member.getEmail());
-
+        member.setStamp(new Stamp());
         return memberRepository.save(member);
     }
 
@@ -33,7 +33,6 @@ public class MemberService {
                 .ifPresent(name -> findMember.setName(name));
         Optional.ofNullable(member.getPhone())
                 .ifPresent(phone -> findMember.setPhone(phone));
-        // 추가된 부분
         Optional.ofNullable(member.getMemberStatus())
                 .ifPresent(memberStatus -> findMember.setMemberStatus(memberStatus));
 
