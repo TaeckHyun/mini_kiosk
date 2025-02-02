@@ -54,9 +54,13 @@ public class MemberService {
         memberRepository.delete(findMember);
     }
 
+    // 주어진 memberId로 회원을 조회하고, 그 해당 회원이 존재하는지 검증하는 메서드
     public Member findVerifiedMember(long memberId) {
+        // JpaRepository는 Optional 타입을 반환해줌, 값이 없을수도 있을수도 있으니, NPE 방지
         Optional<Member> optionalMember =
                 memberRepository.findById(memberId);
+        // Optional 타입으로 받아온 Member는 값이 있을수도 있고 없을수도 있으니 검증이 필요함
+        // orElseThrow를 사용하여 Optional 내부값이 없으면 예외처리, 있으면 내부값만 빼서 변수에 할당해줌
         Member findMember =
                 optionalMember.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));

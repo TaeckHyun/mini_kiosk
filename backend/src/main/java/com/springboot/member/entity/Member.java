@@ -34,15 +34,20 @@ public class Member extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
 
+    // CascadeType.PERSIST, REMOVE를 통해 member가 영속성 컨텍스트에 올라가면 stamp도 같이 올라감, 지울때도 같이 삭제
     @OneToOne(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "STAMP_ID")
     private Stamp stamp;
 
+    // new ArrayList로 초기화, Null 참조 방지
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
+    // Stamp와 동기화, 영속성 전이
     public void setStamp(Stamp stamp) {
+        // stamp 파라미터로 가지고 있는 stamp
         this.stamp = stamp;
+        //
         if(stamp.getMember() != this) {
             stamp.setMember(this);
         }
